@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:news_app/models/ReportModel.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -9,6 +10,9 @@ class ReportDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String formattedDate =
+        DateFormat.yMMMMd().format(DateTime.parse(report.publishedAt));
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -55,7 +59,7 @@ class ReportDetail extends StatelessWidget {
                   ),
                   SizedBox(height: 8),
                   Text(
-                    'Published At: ${report.publishedAt}',
+                    '$formattedDate',
                     style: TextStyle(
                       color: Colors.grey[900],
                     ),

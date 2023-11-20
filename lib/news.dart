@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:news_app/api/news_datasource.dart';
 import 'package:news_app/models/NewsModel.dart';
 import 'package:news_app/news_detail.dart';
+import 'package:intl/intl.dart';
 
 class NewsPage extends StatefulWidget {
   const NewsPage({Key? key}) : super(key: key);
@@ -62,12 +63,14 @@ class _NewsPageState extends State<NewsPage> {
     return ListView.builder(
       itemCount: results.results.length,
       itemBuilder: (BuildContext context, int index) {
-        return _buildItemUsers(results.results[index]);
+        return _buildItemNews(results.results[index]);
       },
     );
   }
 
-  Widget _buildItemUsers(Results news) {
+  Widget _buildItemNews(Results news) {
+    String formattedDate =
+        DateFormat.yMMMMd().format(DateTime.parse(news.publishedAt));
     return InkWell(
       onTap: () {
         Navigator.push(context, MaterialPageRoute(builder: (context) {
@@ -81,34 +84,50 @@ class _NewsPageState extends State<NewsPage> {
         margin: EdgeInsets.only(bottom: 16.0),
         child: Padding(
           padding: EdgeInsets.all(16.0),
-          child: Row(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                width: 100,
+              ClipRRect(
+                borderRadius: BorderRadius.circular(8.0),
                 child: Image.network(
                   news.imageUrl,
-                  width: 200,
-                  height: 100,
+                  width: double.infinity,
+                  height: 200.0,
+                  fit: BoxFit.cover,
                 ),
               ),
-              SizedBox(
-                width: 15,
+              SizedBox(height: 12.0),
+              Text(
+                news.title,
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 3,
               ),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      news.title,
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 3,
-                    ),
-                    SizedBox(height: 8.0),
-                    Text(news.newsSite),
-                  ],
-                ),
+              SizedBox(height: 8.0),
+              Text(
+                news.newsSite,
+                style: TextStyle(color: Colors.grey[900]),
+              ),
+              SizedBox(height: 8.0),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "${formattedDate}",
+                    style: TextStyle(color: Colors.grey[900]),
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.arrow_forward),
+                    onPressed: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                        return NewsDetail(
+                          news: news,
+                        );
+                      }));
+                    },
+                  ),
+                ],
               ),
             ],
           ),

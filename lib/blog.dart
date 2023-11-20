@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:news_app/api/blog_datasource.dart';
 import 'package:news_app/models/BlogModel.dart';
 import 'package:news_app/blog_detail.dart';
@@ -23,11 +24,11 @@ class _BlogsPageState extends State<BlogsPage> {
         centerTitle: true,
         foregroundColor: Colors.white,
       ),
-      body: _buildListUsersBody(),
+      body: _buildListBlogsBody(),
     );
   }
 
-  Widget _buildListUsersBody() {
+  Widget _buildListBlogsBody() {
     return Container(
       padding: EdgeInsets.all(16.0),
       child: FutureBuilder(
@@ -62,12 +63,14 @@ class _BlogsPageState extends State<BlogsPage> {
     return ListView.builder(
       itemCount: results.results.length,
       itemBuilder: (BuildContext context, int index) {
-        return _buildItemUsers(results.results[index]);
+        return _buildBlog(results.results[index]);
       },
     );
   }
 
-  Widget _buildItemUsers(Results blog) {
+  Widget _buildBlog(Results blog) {
+    String formattedDate =
+        DateFormat.yMMMMd().format(DateTime.parse(blog.publishedAt));
     return InkWell(
       onTap: () {
         Navigator.push(context, MaterialPageRoute(builder: (context) {
@@ -81,34 +84,51 @@ class _BlogsPageState extends State<BlogsPage> {
         margin: EdgeInsets.only(bottom: 16.0),
         child: Padding(
           padding: EdgeInsets.all(16.0),
-          child: Row(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                width: 100,
+              ClipRRect(
+                borderRadius: BorderRadius.circular(8.0),
                 child: Image.network(
                   blog.imageUrl,
-                  width: 200,
-                  height: 100,
+                  width: double.infinity,
+                  height: 200.0,
+                  fit: BoxFit.cover,
                 ),
               ),
-              SizedBox(
-                width: 15,
+              SizedBox(height: 12.0),
+              Text(
+                blog.title,
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 3,
               ),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      blog.title,
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 3,
-                    ),
-                    SizedBox(height: 8.0),
-                    Text(blog.newsSite),
-                  ],
-                ),
+              SizedBox(height: 8.0),
+              Text(
+                blog.newsSite,
+                style: TextStyle(color: Colors.grey[900]),
+              ),
+              SizedBox(height: 8.0),
+              Text(
+                "$formattedDate", // Gunakan tanggal yang telah diformat
+                style: TextStyle(color: Colors.grey[900]),
+              ),
+              SizedBox(height: 8.0),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  IconButton(
+                    icon: Icon(Icons.arrow_forward),
+                    onPressed: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                        return BlogDetails(
+                          blog: blog,
+                        );
+                      }));
+                    },
+                  ),
+                ],
               ),
             ],
           ),

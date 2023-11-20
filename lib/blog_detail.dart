@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:news_app/models/BlogModel.dart';
+import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:news_app/models/BlogModel.dart';
 
 class BlogDetails extends StatelessWidget {
   final Results blog;
@@ -9,6 +10,9 @@ class BlogDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String formattedDate =
+        DateFormat.yMMMMd().format(DateTime.parse(blog.publishedAt));
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -55,7 +59,7 @@ class BlogDetails extends StatelessWidget {
                   ),
                   SizedBox(height: 8),
                   Text(
-                    'Published At: ${blog.publishedAt}',
+                    '$formattedDate',
                     style: TextStyle(
                       color: Colors.grey[700],
                     ),
