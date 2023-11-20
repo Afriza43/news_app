@@ -71,7 +71,7 @@ class _BlogsPageState extends State<BlogsPage> {
     return InkWell(
       onTap: () {
         Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return BlogsDetails(
+          return BlogDetails(
             blog: blog,
           );
         }));
