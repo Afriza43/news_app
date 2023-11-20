@@ -5,3 +5,5 @@ Package Flutter :
 - Google Fonts
 - Lottie
 - Http
+- Url_launcher
+- Intl
